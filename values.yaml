@@ -41,12 +41,29 @@ securityContext: {}
 
 appSettingsConfigMapName: ""
 
-
+# Environment variables to be set in the pod
 env: 
-- name: ASPNETCORE_ENVIRONMENT
-  value: Development
-- name: ASPNETCORE_URLS
-  value: http://+:8080
+  ASPNETCORE_ENVIRONMENT: Development
+  ASPNETCORE_URLS: http://+:8080
+
+# the volume and volume mounts for CSI driver will be automatically added to the deployment pod
+azureSecrets:
+  enabled: false
+  usePodIdentity: "false"
+  useVMManagedIdentity: "true"
+  # MSI (client ID) with roles to authenticate to Azure Key Vault
+  userAssignedIdentityId: "54d3-123-123-123-123123123123"
+  # Tenant ID of the Azure Key Vault
+  tenantId: "1323-123-123-123-123123123123"
+  # Name of the key vault where the secrets are stored
+  keyvaultName: "test-keyvault"
+  # Unless specified the default is AzurePublicCloud
+  cloudName: "AzurePublicCloud"
+
+  secrets: 
+    # Secrets should be in the form of env_var_name: keyvault_secret_name
+    APPINSIGHTS_INSTRUMENTATIONKEY: appinsights-instrumentationkey
+    CONNECTION_STRING: connection-string
 
 service:
   type: ClusterIP
@@ -98,17 +115,17 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes:
-- name: config
-  configMap:
-    name: sample-dotnetcore-app-cm
-    optional: false
+volumes: []
+# - name: config
+#   configMap:
+#     name: sample-dotnetcore-app-cm
+#     optional: false
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-- name: config
-  mountPath: "/app/properties"
-  readOnly: true
+volumeMounts: []
+# - name: config
+#   mountPath: "/app/properties"
+#   readOnly: true
 
 nodeSelector: {}
 
