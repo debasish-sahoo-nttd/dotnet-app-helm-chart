@@ -1,9 +1,12 @@
 #  Helm Chart for Dotnet Core App
 
-This helm chart is used to deploy a dotnet core app to kubernetes.
-It also supports pulling the secrets from Azure Key Vault and injecting them into the pod through volume mounts and environment variables.
+This helm chart is used to deploy a `dotnet core` app to kubernetes cluster. This chart can be extended to deploy any microservice written in any language as long as it accepts inputs and secrets (pulled from Azure Key vault) in form of environment variables.
+
+It also supports pulling the secrets from Azure Key Vault (by using k8s csi plugin) and injecting them into the pod through volume mounts and environment variables.
 
 ## Authenticate to ACR
+
+This form of authentication is using temporary token to authenticate to the ACR. This is useful when you are using helm registry plugin to push the chart to ACR.
 
 ```bash
 # Authenticate
@@ -38,8 +41,8 @@ Instead, you need to follow the below steps to install the chart from ACR.
 
 ```bash
 # Ensure you are logged in to the ACR
-helm install sample-dotnetcore-app oci://dsopublic.azurecr.io/helm/fdc-dotnetcore-app --version 0.1.0 --dry-run
+helm install sample-dotnetcore-app oci://dsopublic.azurecr.io/helm/dotnet-app --version 0.1.0 --dry-run
 
-helm upgrade  sample-dotnetcore-app  oci://dsopublic.azurecr.io/helm/fdc-dotnetcore-app --version 0.1.0 -f override_values.yaml
+helm upgrade  sample-dotnetcore-app  oci://dsopublic.azurecr.io/helm/dotnet-app --version 0.1.0 -f override_values.yaml
 
 ```
